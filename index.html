@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leilão FC</title><meta name="theme-color" content="#2a4bff">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#eceff5;--ink:#0e1a3a;--mut:#5d6b8a;--card:#f8f9fc;--line:#d3d9e6;--acc:#2a4bff;--on:#fff;--good:#14946b;--bad:#d6403a;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1020;--ink:#e9eeff;--mut:#8e9bbd;--card:#121a33;--line:#222d4d;--acc:#8ea2ff;--on:#0a1020;--good:#3ed3a2;--bad:#ff7d76;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a1020;--ink:#e9eeff;--mut:#8e9bbd;--card:#121a33;--line:#222d4d;--acc:#8ea2ff;--on:#0a1020;--good:#3ed3a2;--bad:#ff7d76;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif}
+#app{max-width:520px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 18px max(28px,env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:center;padding:6px 0 18px}
+header b{font-weight:800;letter-spacing:-.3px}
+.pill{border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:14px;color:var(--mut)}
+h1{font-size:clamp(46px,14vw,68px);line-height:.95;letter-spacing:-2.5px;font-weight:800;margin:40px 0 14px}
+h2{font-size:15px;font-weight:600;color:var(--mut);margin:26px 0 8px}
+.lead{font-size:19px;color:var(--mut);max-width:30ch;margin:0 0 30px}
+.mut{color:var(--mut);font-size:14px}
+label{display:block;font-size:14px;color:var(--mut);margin-bottom:14px}
+input{display:block;width:100%;margin-top:6px;font:inherit;font-size:18px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+input:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button{font:inherit;font-weight:600;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;transition:transform .08s}
+button:active:not(:disabled){transform:scale(.97)}button:disabled{opacity:.35;cursor:not-allowed}
+button.pri{background:var(--acc);border-color:var(--acc);color:var(--on)}
+.row{display:flex;gap:10px}.row>*{flex:1}.row input{margin:0}
+.or{text-align:center;color:var(--mut);font-size:14px;margin:18px 0}
+.code{font-size:clamp(64px,22vw,96px);font-weight:800;letter-spacing:6px;text-align:center;padding:14px 0 14px 6px;border:1px dashed var(--line);border-radius:18px;cursor:pointer;margin:8px 0}
+.list{list-style:none;padding:0;margin:0 0 18px;border-top:1px solid var(--line)}
+.list li{display:flex;justify-content:space-between;padding:12px 2px;border-bottom:1px solid var(--line)}
+.on{color:var(--good)}.off{color:var(--mut)}
+.who{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px}
+.nm{font-size:28px;font-weight:800;letter-spacing:-.8px}
+.ovr{font-size:28px;font-weight:800;color:var(--acc)}
+.tag{display:inline-block;font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:1px 8px;color:var(--mut)}
+.price{font-size:clamp(84px,30vw,132px);font-weight:800;letter-spacing:-5px;line-height:1;font-variant-numeric:tabular-nums;margin:14px 0 4px}
+.price small{font-size:.28em;letter-spacing:0;color:var(--mut);margin-right:6px;font-weight:600}
+.pop{animation:pop .25s ease-out}@keyframes pop{from{transform:scale(1.07);color:var(--acc)}to{transform:scale(1)}}
+.track{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:10px 0 6px}.track i{display:block;height:100%;background:var(--acc);width:100%}
+.bids{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.bids button{padding:16px 0;font-size:18px}
+.slots{display:grid;gap:6px}
+.slot{display:flex;justify-content:space-between;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px}
+.slot.empty{border-style:dashed;color:var(--mut);background:none}
+.strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.chip{flex:none;border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:14px;min-width:96px}
+.chip b{display:block;font-variant-numeric:tabular-nums}.chip.lead{border-color:var(--acc)}
+.board{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;text-align:center}
+.board .s{font-size:52px;font-weight:800;letter-spacing:-2px;font-variant-numeric:tabular-nums}.board .t{font-weight:600;overflow-wrap:anywhere}
+.clock{text-align:center;color:var(--mut);font-size:14px;margin-bottom:6px}
+svg.pitch{width:100%;height:auto;display:block;margin:10px 0 4px;touch-action:manipulation}
+.pitch .ln{fill:none;stroke:var(--line);stroke-width:2}.pitch .bg{fill:var(--card)}
+.dot circle{fill:var(--acc);stroke:var(--card);stroke-width:3;transition:r .15s}
+.dot.off circle{stroke:var(--bad);stroke-dasharray:4 3}.dot.sel circle{r:25;stroke:var(--ink)}
+.dot text{text-anchor:middle;pointer-events:none}.dot .o{fill:var(--on);font-weight:800;font-size:16px}
+.dot .n{fill:var(--ink);font-size:12px;font-weight:600}.dot .p{fill:var(--mut);font-size:11px}
+.dot{cursor:pointer}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.seg button{border:0;border-radius:0;background:none;padding:11px 4px;font-size:14px}
+.seg button.a{background:var(--acc);color:var(--on)}
+.ev{list-style:none;padding:0;margin:0;font-size:14px}.ev li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:10px}
+.ev .m{color:var(--mut);width:32px;font-variant-numeric:tabular-nums}.ev .g{font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums}
+th{font-weight:400;color:var(--mut);font-size:13px}td,th{padding:8px 4px;text-align:center;border-bottom:1px solid var(--line)}
+td:nth-child(2),th:nth-child(2){text-align:left}tr.me td{font-weight:800;color:var(--acc)}
+.trophy{font-size:34px;font-weight:800;letter-spacing:-1px;margin:6px 0 2px}
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:9}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div id="app"></div>
+<script>
+const $=s=>document.querySelector(s),app=$('#app');
+const FORMS={'2-1-1':[2,1,1],'1-2-1':[1,2,1],'1-1-2':[1,1,2]};
+const STY={ofensivo:'Ataque',equilibrado:'Equilibrado',defensivo:'Defesa',posse:'Posse'};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S=null,ws,sel=-1,lastBid=-1,store={};
+try{store=JSON.parse(localStorage.getItem('lfc')||'{}')}catch{}
+if(!store.id)store.id=Math.random().toString(36).slice(2)+Date.now().toString(36);
+const save=()=>{try{localStorage.setItem('lfc',JSON.stringify(store))}catch{}};
+const send=o=>{if(ws&&ws.readyState===1)ws.send(JSON.stringify(o))};
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
+function conn(){ws=new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host);
+  ws.onopen=()=>{if(store.code)send({t:'join',code:store.code,name:store.name,id:store.id})};
+  ws.onmessage=e=>{const m=JSON.parse(e.data);
+    if(m.t==='state'){S=m.s;S.at=Date.now();store.code=S.code;save();render()}
+    else if(m.t==='err'){toast(m.m);if(!S){store.code='';save()}}};
+  ws.onclose=()=>setTimeout(conn,1500)}
+const T=()=>S.teams.find(t=>t.pid===S.me),nameOf=p=>{const t=S.teams.find(x=>x.pid===p);return t?esc(t.name):''};
+const bar=()=>`<header><b>Leilão FC</b><span class="pill">Sala ${S.code}</span></header>`;
+
+function home(){app.innerHTML=`<h1>Leilão FC</h1><p class="lead">R$ 100, cinco jogadores, noventa minutos. Monte o time no leilão e dispute com a galera.</p>
+<label>Seu nome<input id="nm" maxlength="14" autocomplete="off" value="${esc(store.name||'')}"></label>
+<button class="pri" style="width:100%" onclick="create()">Criar sala</button>
+<div class="or">ou entre com um código</div>
+<div class="row"><input id="cd" maxlength="4" placeholder="ABCD" autocapitalize="characters" autocomplete="off" value="${esc((new URLSearchParams(location.search).get('s')||'').toUpperCase())}"><button onclick="join()">Entrar na sala</button></div>`}
+function nameVal(){const n=$('#nm').value.trim();if(!n){toast('Escreva seu nome.');return null}store.name=n;save();return n}
+function create(){const n=nameVal();if(n)send({t:'create',name:n,id:store.id})}
+function join(){const n=nameVal(),c=$('#cd').value.trim().toUpperCase();if(!n)return;if(c.length!==4)return toast('O código tem 4 letras.');send({t:'join',code:c,name:n,id:store.id})}
+function share(){const u=`${location.origin}/?s=${S.code}`;
+  if(navigator.share)navigator.share({title:'Leilão FC',text:'Entra na minha sala do Leilão FC',url:u}).catch(()=>{});
+  else if(navigator.clipboard)navigator.clipboard.writeText(u).then(()=>toast('Link copiado.'),()=>toast(u))}
+
+function lobby(){const host=S.host===S.me;
+  app.innerHTML=bar()+`<h2>Mande este código para a galera</h2><div class="code" onclick="share()" title="Copiar link">${S.code}</div><p class="mut">Toque no código para compartilhar o link da sala.</p>
+<h2>Na sala (${S.teams.length} de 8)</h2><ul class="list">${S.teams.map(t=>`<li><span>${esc(t.name)}${t.pid===S.host?' (dono)':''}${t.pid===S.me?' (você)':''}</span><span class="${t.on?'on':'off'}">${t.on?'online':'offline'}</span></li>`).join('')}</ul>
+${host?`<div class="row"><button onclick="send({t:'addbot'})" ${S.teams.length>=8?'disabled':''}>Adicionar bot</button><button class="pri" onclick="send({t:'start'})" ${S.teams.length<2?'disabled':''}>Começar leilão</button></div>`:'<p class="mut">Aguardando o dono começar o leilão.</p>'}`}
+
+function auction(){const a=S.auc,p=a.p,m=T(),lead=a.by===S.me,left=5-m.squad.length,mx=m.budget-(left-1);
+  const can=v=>!lead&&left>0&&v>a.bid&&v<=mx,pop=a.bid!==lastBid;lastBid=a.bid;
+  app.innerHTML=bar()+`<div class="mut">Jogador ${a.n} de ${a.of}</div>
+<div class="who"><div><div class="nm">${esc(p.n)}</div><span class="tag">${p.p}</span></div><div class="ovr">${p.o}</div></div>
+<div class="price ${pop?'pop':''}"><small>R$</small>${a.bid}</div>
+<div class="track"><i id="bar"></i></div>
+<div class="mut"><span id="sec"></span>s · ${a.by?(lead?'Você está ganhando':'Maior lance: '+nameOf(a.by)):'Sem lances ainda'}</div>
+<div class="bids">${[1,5,10].map(n=>`<button onclick="send({t:'bid',v:${a.bid+n}})" ${can(a.bid+n)?'':'disabled'}>+${n}</button>`).join('')}<button class="pri" onclick="send({t:'bid',v:${mx}})" ${can(mx)?'':'disabled'}>Tudo</button></div>
+<h2>Seu elenco · saldo R$ ${m.budget}</h2><div class="slots">${Array.from({length:5},(_,i)=>{const q=m.squad[i];return q?`<div class="slot"><span>${esc(q.n)} <span class="tag">${q.p}</span></span><b>${q.o}</b></div>`:'<div class="slot empty">Vaga livre</div>'}).join('')}</div>
+<h2>Adversários</h2><div class="strip">${S.teams.filter(t=>t.pid!==S.me).map(t=>`<div class="chip ${t.pid===a.by?'lead':''}">${esc(t.name)}<b>R$ ${t.budget}</b><span class="mut">${t.squad.length} de 5</span></div>`).join('')}</div>
+<h2>Últimos lances fechados</h2><div class="mut">${S.log.map(esc).join('<br>')||'Nada ainda.'}</div>`}
+
+function raf(){const b=$('#bar');if(S&&S.phase==='auction'&&S.auc&&b){const ms=Math.max(0,S.auc.ms-(Date.now()-S.at));
+  b.style.width=Math.min(100,ms/100)+'%';b.style.background=ms<3000?'var(--bad)':'';$('#sec').textContent=Math.ceil(ms/1000)}
+  requestAnimationFrame(raf)}
+
+const rolesOf=f=>['GOL',...Array(FORMS[f][0]).fill('DEF'),...Array(FORMS[f][1]).fill('MEI'),...Array(FORMS[f][2]).fill('ATA')];
+function pitch(m){const f=FORMS[m.form],rows=[[1,'GOL'],[f[0],'DEF'],[f[1],'MEI'],[f[2],'ATA']],ys=[318,238,158,78];let i=0,o='';
+  rows.forEach(([n,r],ri)=>{for(let k=0;k<n;k++,i++){const p=m.lineup[i],x=300*(k+1)/(n+1),off=p.p!==r;
+    o+=`<g class="dot${sel===i?' sel':''}${off?' off':''}" onclick="pick(${i})" transform="translate(${x},${ys[ri]})"><circle r="21"/><text class="o" y="5">${p.o}</text><text class="n" y="38">${esc(p.n.split(' ')[0])}</text><text class="p" y="-27">${r}</text></g>`}});
+  return`<svg class="pitch" viewBox="0 0 300 360"><rect class="bg" x="2" y="2" width="296" height="356" rx="14"/><rect class="ln" x="2" y="2" width="296" height="356" rx="14"/><line class="ln" x1="2" y1="180" x2="298" y2="180"/><circle class="ln" cx="150" cy="180" r="38"/><rect class="ln" x="90" y="2" width="120" height="44"/><rect class="ln" x="90" y="314" width="120" height="44"/>${o}</svg>`}
+function pick(i){if(sel<0)sel=i;else if(sel===i)sel=-1;else{send({t:'swap',i:sel,j:i});sel=-1}render()}
+const tbl=()=>`<table><tr><th></th><th>Time</th><th>P</th><th>J</th><th>SG</th></tr>${S.tab.map((t,i)=>`<tr class="${t.pid===S.me?'me':''}"><td>${i+1}</td><td>${esc(t.name)}</td><td>${t.pts}</td><td>${t.j}</td><td>${t.gp-t.gc}</td></tr>`).join('')}</table>`;
+
+function play(){const m=T(),host=S.host===S.me,live=S.phase==='match',mt=S.matches.find(x=>x.a===S.me||x.b===S.me),others=S.matches.filter(x=>x!==mt);
+  let head='';
+  if(mt){head=`<div class="clock">Rodada ${S.round} de ${S.rounds} · ${live?S.min+' minutos':'antes do apito'}</div><div class="board"><div class="t">${nameOf(mt.a)}</div><div class="s">${mt.ga} x ${mt.gb}</div><div class="t">${nameOf(mt.b)}</div></div>`}
+  else head=`<div class="clock">Rodada ${S.round} de ${S.rounds}</div><p class="lead" style="margin:10px 0">Você folga nesta rodada.</p>`;
+  app.innerHTML=bar()+head+(mt?`${pitch(m)}<div class="mut">Toque em dois jogadores para trocar de lugar. Anel tracejado: fora da posição.</div>
+<h2>Estilo de jogo</h2><div class="seg">${Object.keys(STY).map(k=>`<button class="${m.style===k?'a':''}" onclick="send({t:'style',s:'${k}'})">${STY[k]}</button>`).join('')}</div>
+<h2>Formação</h2><div class="seg">${Object.keys(FORMS).map(k=>`<button class="${m.form===k?'a':''}" onclick="send({t:'form',f:'${k}'})">${k}</button>`).join('')}</div>
+${mt.ev.length?`<h2>Lances da partida</h2><ul class="ev">${mt.ev.slice(0,6).map(e=>`<li class="${e.k==='g'?'g':''}"><span class="m">${e.min}'</span><span>${esc(e.tx)}</span></li>`).join('')}</ul>`:''}`:'')
+  +(others.length?`<h2>Outros jogos</h2><ul class="list">${others.map(x=>`<li><span>${nameOf(x.a)}</span><b>${x.ga} x ${x.gb}</b><span>${nameOf(x.b)}</span></li>`).join('')}</ul>`:'')
+  +`<h2>Classificação</h2>${tbl()}`
+  +(!live?(host?`<p><button class="pri" style="width:100%;margin-top:18px" onclick="send({t:'go'})">Iniciar rodada ${S.round}</button></p>`:'<p class="mut">Ajuste o time. O dono inicia a rodada.</p>'):'')}
+
+function end(){const w=S.tab[0],host=S.host===S.me;
+  app.innerHTML=bar()+`<h2>Campeão</h2><div class="trophy">${esc(w.name)}</div><p class="mut">${w.pid===S.me?'É você! Parabéns, técnico.':'Foi dessa vez. Peça a revanche.'}</p>${tbl()}
+${host?`<p><button class="pri" style="width:100%;margin-top:18px" onclick="send({t:'again'})">Jogar de novo</button></p>`:'<p class="mut">O dono pode abrir uma nova rodada de leilão.</p>'}`}
+
+function render(){sel=S&&(S.phase==='setup'||S.phase==='match')?sel:-1;if(!S)return home();({lobby,auction,setup:play,match:play,end})[S.phase]()}
+home();conn();raf();
+</script></body></html>
